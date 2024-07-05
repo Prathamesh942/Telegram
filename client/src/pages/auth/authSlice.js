@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import axios from "axios";
+import axios from "axios";
+
+const user = JSON.parse(localStorage.getItem("user"));
 
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
     isLoggedIn: false,
-    user: null,
+    user: user ? user : null,
   },
   reducers: {
     loginSuccess: (state, action) => {
@@ -21,8 +23,9 @@ export const authSlice = createSlice({
 
 export const login = (userCredentials) => async (dispatch) => {
   try {
-    const response = await axios.post("/api/login", userCredentials);
-    const user = response.data;
+    const response = await axios.post("/api/v1/auth/login", userCredentials);
+    const user = response.data.data.user;
+    localStorage.setItem("user", JSON.stringify(user));
     dispatch(loginSuccess(user));
   } catch (error) {
     console.error("Failed to login:", error);

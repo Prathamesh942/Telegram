@@ -1,25 +1,48 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { login, logout, getUser, isLoggedIn } from "./authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
 
-  const handleSubmit = (event) => {
+  const dispatch = useDispatch();
+  const value = useSelector(getUser);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (isLogin) {
-      // Handle login logic
-      console.log("Logging in with:", { email, password });
-      // You can add your API call here
+      try {
+        setLoading(true);
+        dispatch(login({ email, password }));
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
     } else {
-      // Handle sign up logic
-      console.log("Signing up with:", { username, email, password });
-      // You can add your API call here
+      try {
+        setLoading(true);
+        const res = await axios.post("/api/v1/auth/register", {
+          username,
+          email,
+          password,
+        });
+        console.log(res);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
     }
   };
 
@@ -66,7 +89,7 @@ const Auth = () => {
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
           >
-            {isLogin ? "Login" : "Sign Up"}
+            {loading ? "wait" : isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
         <div className="mt-6 text-center">

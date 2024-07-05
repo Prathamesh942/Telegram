@@ -12,10 +12,6 @@ const UserSchema = new Schema(
       trim: true,
       index: true,
     },
-    name: {
-      type: String,
-      default: "",
-    },
     email: {
       type: String,
       required: true,
