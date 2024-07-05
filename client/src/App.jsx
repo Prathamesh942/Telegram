@@ -1,15 +1,9 @@
 import { useState } from "react";
 import "./App.css";
-import Auth from "./pages/Auth";
+import Auth from "./pages/auth/Auth";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <Auth />
-    </>
-  );
+  return <Auth />;
 }
 
 export default App;
