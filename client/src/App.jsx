@@ -10,7 +10,6 @@ axios.defaults.withCredentials = true;
 
 function App() {
   useEffect(() => {
-    socket.emit("message", "Hello, server");
     socket.on("response", (data) => {
       console.log(data);
     });
@@ -18,7 +17,12 @@ function App() {
       socket.off("welcome");
     };
   }, []);
-  return <Chat />;
+  return (
+    <div>
+      <Auth />
+      <Chat />
+    </div>
+  );
 }
 
 export default App;
