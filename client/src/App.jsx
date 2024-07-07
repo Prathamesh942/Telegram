@@ -4,6 +4,18 @@ import Auth from "./pages/auth/Auth";
 import axios from "axios";
 import socket from "./socket.js";
 import Chat from "./pages/chat/Chat.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Chat />,
+  },
+  {
+    path: "/auth",
+    element: <Auth />,
+  },
+]);
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -17,12 +29,7 @@ function App() {
       socket.off("welcome");
     };
   }, []);
-  return (
-    <div>
-      <Auth />
-      <Chat />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

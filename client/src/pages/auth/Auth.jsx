@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { login, logout, getUser, isLoggedIn } from "./authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,8 +16,16 @@ const Auth = () => {
     setIsLogin(!isLogin);
   };
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const value = useSelector(getUser);
+  const user = useSelector(getUser);
+
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

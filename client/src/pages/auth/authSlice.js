@@ -6,7 +6,7 @@ const user = JSON.parse(localStorage.getItem("user"));
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: false,
+    isLoggedIn: user ? true : false,
     user: user ? user : null,
   },
   reducers: {
