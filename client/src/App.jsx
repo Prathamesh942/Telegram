@@ -17,7 +17,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://telegram-mmwc.onrender.com";
 axios.defaults.withCredentials = true;
 
 function App() {
