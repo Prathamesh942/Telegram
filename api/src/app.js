@@ -8,6 +8,7 @@ import cookie from "cookie";
 import http from "http";
 import jwt from "jsonwebtoken";
 import { Server } from "socket.io";
+import { UserStatus } from "./models/userstatus.model.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -39,12 +40,25 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   console.log("New client connected:", socket.user);
 
+  socket.on("user-online", async (userId) => {
+    await UserStatus.findOneAndUpdate(
+      { userId },
+      { online: true, lastSeen: new Date() },
+      { upsert: true }
+    );
+  });
+
   socket.on("sendMessage", (msg) => {
     io.emit("receiveMessage", msg);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
+    const userId = socket._Id;
     console.log("Client disconnected");
+    await UserStatus.findOneAndUpdate(
+      { userId },
+      { online: false, lastSeen: new Date() }
+    );
   });
 });
 
