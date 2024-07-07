@@ -1,30 +1,32 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 const SearchInput = ({ searchUser, setSearching }) => {
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      return;
-    };
-
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [setSearching]);
+  const handleCloseClick = () => {
+    setSearching(false);
+    inputRef.current.value = "";
+  };
 
   return (
-    <input
-      type="text"
-      placeholder="search"
-      className="p-3 py-4 rounded-xl bg-zinc-800"
-      onChange={searchUser}
-      onClick={() => {
-        setSearching(true);
-      }}
-      ref={inputRef}
-    />
+    <div>
+      <input
+        type="text"
+        placeholder="search"
+        className="p-3 py-4 rounded-xl bg-zinc-900 text-white outline-none"
+        onChange={searchUser}
+        onClick={() => {
+          setSearching(true);
+        }}
+        ref={inputRef}
+      />
+      <button
+        onClick={handleCloseClick}
+        className=" right-2 top-2  text-white p-4 rounded-xl"
+      >
+        Close
+      </button>
+    </div>
   );
 };
 

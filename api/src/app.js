@@ -53,8 +53,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", async () => {
-    const userId = socket._Id;
-    console.log("Client disconnected");
+    const userId = socket.user._id;
+    console.log("Client disconnected", userId);
     await UserStatus.findOneAndUpdate(
       { userId },
       { online: false, lastSeen: new Date() }

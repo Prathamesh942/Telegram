@@ -80,7 +80,10 @@ const Chat = () => {
       }
     });
 
+    socket.emit("user-online", user._id);
+
     return () => {
+      socket.disconnect();
       socket.off("receiveMessage");
     };
   }, [receiver, user?._id, mymessage]);
@@ -114,13 +117,16 @@ const Chat = () => {
 
   return (
     <div className=" flex justify-center items-center w-screen h-screen bg-[#111111] select-none">
-      <div className="flex justify-center items-center bg-[#1a1a1a] w-screen h-screen flex-row-reverse rounded-xl">
+      <div className="flex justify-center items-center bg-zinc-900 w-screen h-screen flex-row-reverse rounded-xl">
         {receiver ? (
           <div className="flex flex-col p-8 px-[6vw] relative h-[100%] flex-[2] ">
             <h3 className="  rounded-lg p-2 text-3xl font-semibold text-white flex items-center gap-5">
               <img
                 className=" size-[80px] rounded-full"
-                src={receiver?.contact?.profileImg}
+                src={
+                  receiver?.contact?.profileImg ||
+                  "https://cdn3d.iconscout.com/3d/premium/thumb/user-5115591-4280969.png?f=webp"
+                }
                 alt=""
               />
               <div className=" flex flex-col">
@@ -129,7 +135,7 @@ const Chat = () => {
                 <span className=" text-base font-light text-zinc-300">
                   {status?.online
                     ? "🟢 online"
-                    : `Last seen ${minutesPast(status.lastSeen)}m ago`}
+                    : `Last seen ${minutesPast(status?.lastSeen)}m ago`}
                 </span>
               </div>
             </h3>
@@ -159,6 +165,12 @@ const Chat = () => {
                 onChange={(e) => setMyMessage(e.target.value)}
                 value={mymessage}
                 className="flex-grow p-2 rounded-l-md bg-transparent text-white outline-none"
+                onKeyDown={(e) => {
+                  console.log("hi");
+                  if (e.key === "Enter") {
+                    handleSubmit(e);
+                  }
+                }}
               />
               <button
                 className="p-2 bg-white rounded-r-md"
@@ -175,7 +187,7 @@ const Chat = () => {
             </h3>
           </div>
         )}
-        <div className="flex flex-col p-8  relative flex-1 min-w-[400px] h-[100%] gap-5">
+        <div className="flex flex-col p-8  relative flex-1 min-w-[400px] h-[100%] gap-5 bg-zinc-800">
           <SearchInput searchUser={searchUser} setSearching={setSearching} />
           <div className=" flex flex-col gap-2">
             {searching ? (
@@ -185,7 +197,7 @@ const Chat = () => {
                   return (
                     <div
                       key={user._id || index}
-                      className="p-2 flex gap-2 text-xl text-white bg-green-500"
+                      className="p-2 flex gap-2 text-xl text-white"
                       onClick={() => {
                         console.log(user);
                         setReceiver(user);
